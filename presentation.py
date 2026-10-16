@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import discord
 
-from .models import DEFAULT_ROLE_CATALOG, MafiaGame, Phase, RoleKey
+from models import DEFAULT_ROLE_CATALOG, MafiaGame, Phase, RoleKey
 
 
 INK = 0x20252E
