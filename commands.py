@@ -8,11 +8,11 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from .ai_players import reply_to_chat
-from .bot import MafiaBot
-from .models import GameRules, Phase, RoleKey
-from .presentation import lobby_embed, player_label, rules_embed
-from .ui import LobbyView, StartSetupView
+from ai_players import reply_to_chat
+from bot import MafiaBot
+from models import GameRules, Phase, RoleKey
+from presentation import lobby_embed, player_label, rules_embed
+from ui import LobbyView, StartSetupView
 
 logger = logging.getLogger("mafia_master.commands")
 
