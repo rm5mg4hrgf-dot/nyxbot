@@ -1609,6 +1609,7 @@ class MafiaBot(commands.Bot):
         if game.vote_message_id:
             self.add_view(VoteView(self, game), message_id=int(game.vote_message_id))
         self.schedule_phase(game)
+        
 def main() -> None:
     logging.basicConfig(
         level=logging.INFO,
