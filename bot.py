@@ -1000,6 +1000,89 @@ class MafiaBot(commands.Bot):
         if cancelled is not None:
             await self._delete_game_threads(cancelled)
         await interaction.followup.send("Lobby cancelled.", ephemeral=True)
+            
+    async def handle_cancel_any_game(
+        self,
+        interaction: discord.Interaction,
+        game_id: str,
+    ) -> None:
+        game = self.manager.get(game_id)
+
+        if game is None:
+            await self.reply_private(
+                interaction,
+                "This game is no longer available.",
+            )
+            return
+
+        if (
+            interaction.guild_id is None
+            or str(interaction.guild_id) != game.guild_id
+        ):
+            await self.reply_private(
+                interaction,
+                "This game belongs to another server.",
+            )
+            return
+
+        if str(interaction.user.id) != game.host_id:
+            await self.reply_private(
+                interaction,
+                "Only the host can cancel this game.",
+            )
+            return
+
+        if game.phase in {Phase.FINISHED, Phase.CANCELLED}:
+            await self.reply_private(
+                interaction,
+                "This game has already ended.",
+            )
+            return
+
+        await interaction.response.defer(ephemeral=True)
+
+        try:
+            async with self.manager.edit(game_id) as current:
+                self.engine.cancel_game(current)
+                snapshot = deepcopy(current)
+
+        except GameRuleError as exc:
+            await interaction.followup.send(
+                str(exc), ephemeral=True
+            )
+            return
+
+        # Stop the phase timer and prevent further game progression.
+        self.schedule_phase(snapshot)
+
+        # Announce cancellation before removing game threads.
+        channel = await self.fetch_game_channel(snapshot)
+
+        if channel is not None:
+            with suppress(
+                discord.HTTPException,
+                discord.Forbidden,
+                discord.NotFound,
+            ):
+                await channel.send(
+                    "🛑 **Game cancelled by the host.** "
+                    "All game phases have stopped. "
+                    "The host can create a new lobby."
+                )
+
+        # Close the original lobby controls.
+        await self._edit_lobby_after_start_failure(game_id)
+
+        # Remove private game threads, if any.
+        await self._delete_game_threads(snapshot)
+
+        # Keep the saved record but remove the terminal game from RAM.
+        await self.manager.retire(game_id)
+
+        await interaction.followup.send(
+            "Game cancelled successfully.",
+            ephemeral=True,
+        )
 
     async def handle_vote(
         self,
