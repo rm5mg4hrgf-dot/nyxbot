@@ -13,7 +13,7 @@ from typing import Any
 import discord
 from discord.ext import commands
 
-from .ai_players import (
+from ai_players import (
     build_ai_players,
     choose_day_vote,
     choose_detective_target,
