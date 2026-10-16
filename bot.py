@@ -1609,3 +1609,21 @@ class MafiaBot(commands.Bot):
         if game.vote_message_id:
             self.add_view(VoteView(self, game), message_id=int(game.vote_message_id))
         self.schedule_phase(game)
+def main() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+
+    token = os.getenv("DISCORD_TOKEN")
+    if not token:
+        raise RuntimeError(
+            "DISCORD_TOKEN environment variable is missing."
+        )
+
+    bot = MafiaBot()
+    bot.run(token)
+
+
+if __name__ == "__main__":
+    main()
