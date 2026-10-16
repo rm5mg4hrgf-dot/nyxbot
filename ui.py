@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 import discord
 
-from .models import MafiaGame, Phase, RoleKey
+from models import MafiaGame, Phase, RoleKey
 
 if TYPE_CHECKING:
     from .bot import MafiaBot
