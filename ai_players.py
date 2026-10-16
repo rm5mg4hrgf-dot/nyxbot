@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from typing import Protocol
 
-from .models import MafiaGame, Player, RoleKey
+from models import MafiaGame, Player, RoleKey
 
 
 class ChoiceSource(Protocol):
