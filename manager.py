@@ -8,8 +8,8 @@ from copy import deepcopy
 import uuid
 from collections.abc import AsyncIterator
 
-from .models import GameRules, MafiaGame, Phase, Player, phase_is_active
-from .storage import SQLiteStore
+from models import GameRules, MafiaGame, Phase, Player, phase_is_active
+from storage import SQLiteStore
 
 
 class GameManager:
