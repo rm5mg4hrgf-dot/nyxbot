@@ -24,16 +24,16 @@ from ai_players import (
     reply_to_chat,
     validate_player_counts,
 )
-from .engine import (
+from engine import (
     DuplicateActionError,
     GameEngine,
     GameRuleError,
     NightResolution,
 )
-from .ai_storyteller import generate_morning_story
-from .manager import GameManager
-from .models import GameRules, MafiaGame, Phase, Player, RoleKey
-from .presentation import (
+from ai_storyteller import generate_morning_story
+from manager import GameManager
+from models import GameRules, MafiaGame, Phase, Player, RoleKey
+from presentation import (
     discussion_embed,
     elimination_embed,
     final_embed,
@@ -45,9 +45,9 @@ from .presentation import (
     rules_embed,
     vote_embed,
 )
-from .stories import build_morning_story, validate_story_library
-from .storage import SQLiteStore
-from .ui import (
+from stories import build_morning_story, validate_story_library
+from storage import SQLiteStore
+from ui import (
     ActionView,
     LobbyView,
     VoteView,
@@ -95,7 +95,7 @@ class MafiaBot(commands.Bot):
         self.chat_replies_enabled = message_content_intent
 
     async def setup_hook(self) -> None:
-        from .commands import MafiaCommands, StartCommand
+        from commands import MafiaCommands, StartCommand
 
         await self.add_cog(MafiaCommands(self))
         await self.add_cog(StartCommand(self))
