@@ -8,9 +8,9 @@ import os
 
 import discord
 
-from .bot import MafiaBot
-from .logging_config import configure_logging
-from .stories import validate_story_library
+from bot import MafiaBot
+from logging_config import configure_logging
+from stories import validate_story_library
 
 
 async def run() -> None:
