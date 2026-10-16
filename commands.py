@@ -245,6 +245,7 @@ class MafiaCommands(commands.GroupCog, group_name="mafia", group_description="Ho
             description=f"**Phase:** {phase_label}\n**Host:** <@{game.host_id}>",
             color=0x416A8C,
         )
+    
         if game.deadline is not None:
             embed.add_field(name="Phase ends", value=f"<t:{int(game.deadline)}:R>", inline=True)
         embed.add_field(
@@ -254,6 +255,24 @@ class MafiaCommands(commands.GroupCog, group_name="mafia", group_description="Ho
         )
         embed.set_footer(text=f"Game ID · {game.game_id[:8]} · Private roles are not shown.")
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @app_commands.command(
+        name="cancel",
+        description="Cancel the current Mafia lobby or active game",
+    )
+    async def cancel(self, interaction: discord.Interaction) -> None:
+        game = _current_game(self.bot, interaction)
+
+        if game is None:
+            await self.bot.reply_private(
+                interaction,
+                "There is no active Mafia game in this channel.",
+            )
+            return
+
+        await self.bot.handle_cancel_any_game(
+            interaction, game.game_id
+        )
 
     @app_commands.command(
         name="opinion",
