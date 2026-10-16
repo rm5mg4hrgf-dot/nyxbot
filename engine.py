@@ -12,7 +12,7 @@ import random
 import time
 from typing import Any, Protocol
 
-from .models import (
+from models import (
     DEFAULT_ROLE_CATALOG,
     GameRules,
     MafiaGame,
