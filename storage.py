@@ -9,7 +9,7 @@ import sqlite3
 import threading
 from typing import Any
 
-from .models import GameRules, MafiaGame, Phase, phase_is_active
+from models import GameRules, MafiaGame, Phase, phase_is_active
 
 
 class SQLiteStore:
