@@ -292,6 +292,36 @@ class HistoryEvent:
 
 
 @dataclass
+class EvidenceEvent:
+    event_id: str
+    timestamp: int
+    day: int
+    night: int
+    kind: str
+    summary: str
+    actor_id: str | None = None
+    target_id: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "event_id": self.event_id,
+            "timestamp": self.timestamp,
+            "day": self.day,
+            "night": self.night,
+            "kind": self.kind,
+            "summary": self.summary,
+            "actor_id": self.actor_id,
+            "target_id": self.target_id,
+            "metadata": dict(self.metadata),
+        }
+
+    @classmethod
+    def from_dict(cls, raw: dict[str, Any]) -> EvidenceEvent:
+        return cls(**raw)
+
+
+@dataclass
 class MafiaGame:
     game_id: str
     guild_id: str
@@ -327,6 +357,7 @@ class MafiaGame:
     investigation_results: dict[str, bool] = field(default_factory=dict)
     private_action_history: list[dict[str, Any]] = field(default_factory=list)
     history: list[HistoryEvent] = field(default_factory=list)
+    evidence_ledger: list[EvidenceEvent] = field(default_factory=list)
     last_night_outcome: str | None = None
     day_vote_count: int = 0
     ai_discussion_day: int = 0
@@ -351,6 +382,30 @@ class MafiaGame:
             if player.role == role and (player.alive or not alive_only)
         ]
 
+    def record_public_evidence(
+        self,
+        kind: str,
+        public_text: str,
+        *,
+        actor_id: str | None = None,
+        target_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> EvidenceEvent:
+        """Store only public events in the evidence ledger; never private role or action details."""
+        event = EvidenceEvent(
+            event_id=f"{self.game_id}:{len(self.evidence_ledger) + 1}",
+            timestamp=int(time.time()),
+            day=self.day_number,
+            night=self.round_number,
+            kind=kind,
+            summary=public_text,
+            actor_id=actor_id,
+            target_id=target_id,
+            metadata=metadata or {},
+        )
+        self.evidence_ledger.append(event)
+        return event
+
     def add_event(self, kind: str, public_text: str) -> None:
         self.history.append(
             HistoryEvent(
@@ -361,6 +416,7 @@ class MafiaGame:
                 public_text=public_text,
             )
         )
+        self.record_public_evidence(kind, public_text)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -398,6 +454,7 @@ class MafiaGame:
             "investigation_results": dict(self.investigation_results),
             "private_action_history": list(self.private_action_history),
             "history": [event.to_dict() for event in self.history],
+            "evidence_ledger": [event.to_dict() for event in self.evidence_ledger],
             "last_night_outcome": self.last_night_outcome,
             "day_vote_count": self.day_vote_count,
             "ai_discussion_day": self.ai_discussion_day,
@@ -413,6 +470,9 @@ class MafiaGame:
         values["phase"] = Phase(values.get("phase", Phase.LOBBY.value))
         values["history"] = [
             HistoryEvent.from_dict(event) for event in values.get("history", [])
+        ]
+        values["evidence_ledger"] = [
+            EvidenceEvent.from_dict(event) for event in values.get("evidence_ledger", [])
         ]
         values.setdefault("doctor_targets", {})
         values.setdefault("detective_targets", {})
