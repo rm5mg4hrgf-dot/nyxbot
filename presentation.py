@@ -18,7 +18,7 @@ SHOCKED_GIF = "https://media.tenor.com/FlqWC5OpKf8AAAAd/surprised-cat.gif"
 LAUGHING_GIF = "https://media.tenor.com/QQNBxAeAvy4AAAAd/laughing-reaction.gif"
 CONFUSED_GIF = "https://media.tenor.com/IklKDJCAZHgAAAAd/confused-cat.gif"
 POPCORN_GIF = "https://media.tenor.com/AAk-e9RN9sEAAAAd/enjoying-the-show-popcorn.gif"
-FACEPALM_GIF = "https://media.tenor.com/y6-0O8TczlMAAAAd/funny-reaction.gif"
+FACEPALM_GIF = "https://media.gifdb.com/facepalm-gif-iqglqb30zphz4cxl.gif"
 DANCE_GIF = "https://media.tenor.com/DVnUx37BK-0AAAAd/cat-dancing.gif"
 
 
