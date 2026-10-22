@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from models import MafiaGame, Player, RoleKey
+from shadowmind import choose_suspect
 
 
 class ChoiceSource(Protocol):
