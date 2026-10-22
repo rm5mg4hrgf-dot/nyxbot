@@ -13,6 +13,20 @@ GREEN = 0x347A5B
 RED = 0x8D3845
 BLUE = 0x416A8C
 
+# Funny reaction GIFs shown on public game embeds.
+SHOCKED_GIF = "https://media.tenor.com/FlqWC5OpKf8AAAAd/surprised-cat.gif"
+LAUGHING_GIF = "https://media.tenor.com/QQNBxAeAvy4AAAAd/laughing-reaction.gif"
+CONFUSED_GIF = "https://media.tenor.com/IklKDJCAZHgAAAAd/confused-cat.gif"
+POPCORN_GIF = "https://media.tenor.com/AAk-e9RN9sEAAAAd/enjoying-the-show-popcorn.gif"
+FACEPALM_GIF = "https://media.tenor.com/y6-0O8TczlMAAAAd/funny-reaction.gif"
+DANCE_GIF = "https://media.tenor.com/DVnUx37BK-0AAAAd/cat-dancing.gif"
+
+
+def _attach_gif(embed: discord.Embed, gif_url: str) -> discord.Embed:
+    """Set a reaction GIF as the embed's main image."""
+    embed.set_image(url=gif_url)
+    return embed
+
 
 def player_label(player) -> str:
     if player.is_ai:
@@ -95,7 +109,7 @@ def discussion_embed(game: MafiaGame, *, opening: bool = False) -> discord.Embed
         inline=True,
     )
     embed.set_footer(text=f"Day {game.day_number}")
-    return embed
+    return _attach_gif(embed, DANCE_GIF if opening else CONFUSED_GIF)
 
 
 def vote_embed(game: MafiaGame) -> discord.Embed:
@@ -140,7 +154,7 @@ def vote_embed(game: MafiaGame) -> discord.Embed:
         )
         embed.add_field(name="Submitted votes", value=details or "No votes yet.", inline=False)
     embed.set_footer(text=f"Game ID · {game.game_id[:8]}")
-    return embed
+    return _attach_gif(embed, POPCORN_GIF)
 
 
 def morning_embed(
@@ -166,7 +180,7 @@ def morning_embed(
         value=f"<t:{int(game.deadline or 0)}:R>",
         inline=True,
     )
-    return embed
+    return _attach_gif(embed, SHOCKED_GIF if outcome_text else CONFUSED_GIF)
 
 
 def elimination_embed(game: MafiaGame, eliminated_id: str, revealed_role: str | None) -> discord.Embed:
@@ -180,7 +194,7 @@ def elimination_embed(game: MafiaGame, eliminated_id: str, revealed_role: str | 
         color=RED,
     )
     embed.set_footer(text=f"{player.name} is out of the game.")
-    return embed
+    return _attach_gif(embed, FACEPALM_GIF)
 
 
 def no_elimination_embed(game: MafiaGame, tied_ids: tuple[str, ...]) -> discord.Embed:
@@ -192,11 +206,12 @@ def no_elimination_embed(game: MafiaGame, tied_ids: tuple[str, ...]) -> discord.
             details += "; nobody was eliminated."
     else:
         details = "No valid votes were cast; nobody was eliminated."
-    return discord.Embed(
+    embed = discord.Embed(
         title=f"Day {game.day_number} · No Elimination",
         description=details,
         color=GOLD,
     )
+    return _attach_gif(embed, LAUGHING_GIF)
 
 
 def final_embed(game: MafiaGame) -> discord.Embed:
@@ -231,7 +246,7 @@ def final_embed(game: MafiaGame) -> discord.Embed:
     timeline = "\n".join(f"• {line}" for line in history[-10:])
     embed.add_field(name="Public event history", value=timeline[:1024] or "No events recorded.", inline=False)
     embed.set_footer(text="Private night actions, investigation results, and hidden votes are never included.")
-    return embed
+    return _attach_gif(embed, DANCE_GIF)
 
 
 def role_embed(game: MafiaGame, player_id: str) -> discord.Embed:
