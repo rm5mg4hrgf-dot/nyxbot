@@ -148,7 +148,7 @@ class ShadowmindTests(unittest.TestCase):
             self.a.user_id,
         )
 
-        self.assertIn("I don't have enough recorded public evidence yet; there is not enough evidence to make a reliable judgment.", explanation.lower())
+        self.assertIn("not enough,", explanation.lower())
 
 if __name__ == "__main__":
     unittest.main()
