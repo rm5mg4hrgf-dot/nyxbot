@@ -264,7 +264,13 @@ def choose_day_vote(
         candidates = [player for player in living if incoming[player.user_id] == lowest]
     else:
         candidates = living
-    return rng.choice(candidates).user_id
+    return choose_suspect(
+    game=game,
+    observer=voter,
+    candidates=candidates,
+    rng=rng,
+
+) or rng.choice(candidates).user_id
 
 
 def choose_mafia_target(game: MafiaGame, actor: Player, rng: ChoiceSource) -> str | None:
