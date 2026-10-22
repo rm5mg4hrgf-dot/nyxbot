@@ -1,4 +1,3 @@
-
 """Shadowmind: evidence-based reasoning for Nyx Mafia AI.
 
 This module uses public evidence only. It never reads hidden player
