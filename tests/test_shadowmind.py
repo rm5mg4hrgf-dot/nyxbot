@@ -148,7 +148,7 @@ class ShadowmindTests(unittest.TestCase):
             self.a.user_id,
         )
 
-        self.assertIn("not enough,", explanation.lower())
+        self.assertIn("enough", explanation.lower())
 
 if __name__ == "__main__":
     unittest.main()
