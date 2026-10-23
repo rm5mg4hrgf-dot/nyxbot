@@ -1,5 +1,7 @@
 # nyxbot# Mafia Master Discord Bot
 
+https://discord.com/oauth2/authorize?client_id=1548731472146337822&permissions=120259095552&integration_type=0&scope=applications.commands+bot
+
 A real `discord.py` bot for playing Mafia in a Discord server. It includes interactive lobbies, private role and night-action messages, timed discussion and voting, a players-only thread option, built-in morning stories, and SQLite recovery after a restart.
 
 ## 1. Create the Discord application
