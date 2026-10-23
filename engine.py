@@ -305,16 +305,6 @@ class GameEngine:
                     },
                 )
                 
-        game.record_public_evidence(
-            kind=kind,
-            public_text=summary,
-            actor_id=voter.user_id,
-            target_id=target.user_id,
-            metadata={
-                "previous_target_id": previous_target_id,
-            },
-        )
-
     def resolve_day_vote(self, game: MafiaGame) -> DayResolution:
         if game.phase != Phase.DAY_VOTING:
             raise GameRuleError("Daytime voting is not active.")
