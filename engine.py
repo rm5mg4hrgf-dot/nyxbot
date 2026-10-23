@@ -270,30 +270,41 @@ class GameEngine:
         previous_target_id = game.votes.get(voter.user_id)
         game.votes[voter.user_id] = target.user_id
 
-# Record individual votes only when votes are public.
-# Anonymous ballots must not reveal who voted for whom.
-if not game.rules.anonymous_votes:
-    if previous_target_id != target.user_id:
-        if previous_target_id is None:
-            kind = "day_vote_cast"
-            summary = (
-                f"Day {game.day_number}: "
-                f"{voter.name} voted for {target.name}."
-            )
-        else:
-            previous_target = game.players.get(previous_target_id)
-            previous_name = (
-                previous_target.name
-                if previous_target is not None
-                else "another player"
-            )
-            kind = "day_vote_changed"
-            summary = (
-                f"Day {game.day_number}: {voter.name} "
-                f"changed their vote from {previous_name} "
-                f"to {target.name}."
 
-            )
+        # Record individual votes only when votes are public.
+        # Anonymous ballots must not reveal who voted for whom.
+        if not game.rules.anonymous_votes:
+            if previous_target_id != target.user_id:
+                if previous_target_id is None:
+                    kind = "day_vote_cast"
+                    summary = (
+                        f"Day {game.day_number}: "
+                        f"{voter.name} voted for {target.name}."
+                    )
+                else:
+                    previous_target = game.players.get(previous_target_id)
+                    previous_name = (
+                        previous_target.name
+                        if previous_target is not None
+                        else "another player"
+                    )
+                    kind = "day_vote_changed"
+                    summary = (
+                        f"Day {game.day_number}: {voter.name} "
+                        f"changed their vote from {previous_name} "
+                        f"to {target.name}."
+                    )
+
+                game.record_public_evidence(
+                    kind=kind,
+                    public_text=summary,
+                    actor_id=voter.user_id,
+                    target_id=target.user_id,
+                    metadata={
+                        "previous_target_id": previous_target_id,
+                    },
+                )
+                
         game.record_public_evidence(
             kind=kind,
             public_text=summary,
